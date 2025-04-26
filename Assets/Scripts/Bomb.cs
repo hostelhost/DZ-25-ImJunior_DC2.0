@@ -1,54 +1,51 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class Bomb : MonoBehaviour
 {
+    private int _lifeTime;
     private Material _material;
-    private WaitForSeconds _lifeTime;
+    private Color _color;
+    private float _maxValue = 1f;
+    private float _minValue = 0f;
 
     public event Action<Bomb> Died;
 
     public void Initialize(int lifeTime)
     {
-        _lifeTime = new WaitForSeconds(lifeTime);
+        _lifeTime = lifeTime;
         _material = GetComponent<Renderer>().material;
-        //_material.color.a; тут нужно возвращать прозрачность к исходному значению
+        _color = _material.color;
+        _color.a = _maxValue;
+        _material.color = _color;  // проверить как все будет работать с пулом, может стоит передавать колар напрямую пулом. или еще как то
     }
 
-    //private IEnumerator BecomesTransparent()
-    //{
-    //    //while ()
-    //    //{
+    private IEnumerator BecomesTransparent()
+    {
+        float timer = 0;
+        float progress;
 
-    //    //    yield return _WFSlifeTime;
-    //    //}
+        while (timer < _lifeTime)
+        {
+            progress = timer / _lifeTime;
+            _color.a = Mathf.Lerp(_maxValue, _minValue, progress);
+            _material.color = _color;
+            timer += Time.deltaTime;
 
-    //    private IEnumerator StartVampirise()
-    //    {
-    //        int ticksCount = _workTimeAbility / _pauseTimeBetweenTicks;
-    //        int damageDone;
+            yield return null;
+        }
 
-    //        for (int i = 0; i < ticksCount; i++)
-    //        {
-    //            if (_detector.TryIdentifyNearestTarget(out Enemy enemy))
-    //            {
-    //                damageDone = enemy.TakeDamage(_powerAbility);
-    //                _player.AddLifeForceIfValid(damageDone);
-    //            }
+        _color.a = _minValue;
+        _material.color = _color;
 
-    //            yield return _waitForSecondsPauseTimeBetweenTicks;
-    //        }
-
-    //        _detectorZoneDisplay.enabled = false;
-
-    //        yield return _waitForSecondsReloadTimeAbility;
-
-    //        _isBusy = false;
-    //    }
-    //}
+        Detonate();
+        Died?.Invoke(this); 
+    }
 
     private void Detonate()
     {
+
 
     }
 }
