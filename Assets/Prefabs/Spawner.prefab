@@ -96,3 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25829c963f64b3844adc15ec0eaf2314, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _cubePrefab: {fileID: 7704858681308310612, guid: 6b3c1a0072b3c24458318ec4b5547c2a, type: 3}
+  _bombPrefab: {fileID: 8256243123332983375, guid: f42ccc76bdbb7b84a8c60eac8f572e67, type: 3}
+  _minLifetime: 2
+  _maxLifetime: 5

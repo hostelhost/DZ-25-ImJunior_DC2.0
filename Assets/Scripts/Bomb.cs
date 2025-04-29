@@ -5,24 +5,25 @@ using UnityEngine;
 
 public class Bomb : MonoBehaviour
 {
-    private int _lifeTime;
+    private int _lifeTimer;
     private Material _material;
     private Color _color;
     private float _maxValue = 1f;
     private float _minValue = 0f;
 
     private float _radiusDitonate = 10f;
-    private float _forceDetonate = 100f;
+    private float _forceDetonate = 1000f;
 
     public event Action<Bomb> Died;
 
     public void Initialize(int lifeTime)
     {
-        _lifeTime = lifeTime;
+        _lifeTimer = lifeTime;
         _material = GetComponent<Renderer>().material;
         _color = _material.color;
         _color.a = _maxValue;
-        _material.color = _color;  // проверить как все будет работать с пулом, может стоит передавать колар напрямую пулом. или еще как то
+        _material.color = _color;
+        StartCoroutine(BecomesTransparent());
     }
 
     private IEnumerator BecomesTransparent()
@@ -30,9 +31,9 @@ public class Bomb : MonoBehaviour
         float timer = 0;
         float progress;
 
-        while (timer < _lifeTime)
+        while (timer < _lifeTimer)
         {
-            progress = timer / _lifeTime;
+            progress = timer / _lifeTimer;
             _color.a = Mathf.Lerp(_maxValue, _minValue, progress);
             _material.color = _color;
             timer += Time.deltaTime;
