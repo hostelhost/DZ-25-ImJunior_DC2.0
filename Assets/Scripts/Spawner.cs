@@ -3,6 +3,13 @@ using UnityEngine.Pool;
 
 public class Spawner : MonoBehaviour //очень внимательно смотри на последние два вопроса deepSeek помощь в дженериках, добавление интерфейсов.
 {
+    //домашнее задание
+    //1. Написать отдельный класс пул с использованием джинериков
+    //2. написать интерейс под куб и бомб создаваемый обьект.
+    //3. переделать систему подписаца отписаться, на систему дилигирования ответственности realese
+    //4. Продолжать по задаче. Делать UI
+
+
     float time = 0f;
     private void Update()
     {
@@ -24,7 +31,7 @@ public class Spawner : MonoBehaviour //очень внимательно смотри на последние два
     private ObjectPool<Cube> _cubePool;
     private ObjectPool<Bomb> _bombPool;
 
-    private void Start()
+    private void Awake()
     {
         CreatePools();
     }
