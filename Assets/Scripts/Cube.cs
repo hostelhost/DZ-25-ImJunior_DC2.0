@@ -2,25 +2,33 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class Cube : MonoBehaviour
+public class Cube : MonoBehaviour, IAppearing
 {
-    private int _lifeTimer;
+    private WaitForSeconds _lifeTimer;
     private bool _isCollision;
+    private Rigidbody _rigidbody;
+    private Action<Vector3> _onDead;
 
-    public event Action<Cube> Died;
-
-    public void Initialize(int lifeTime)
+    private void Awake()
     {
-        _lifeTimer = lifeTime;
+        _rigidbody = GetComponent<Rigidbody>();
+    }
+
+    public void Initialize(int lifeTime, Action<Vector3> onDead)
+    {
+        _lifeTimer = new WaitForSeconds(lifeTime);
+        _onDead = onDead;
+        ResetSpins();
+
         _isCollision = false;
         GetComponent<Renderer>().material.color = Color.white;
     }
 
     private IEnumerator TimerToDeath()
     {
-        yield return new WaitForSeconds(_lifeTimer);
+        yield return _lifeTimer;
 
-        Died?.Invoke(this);
+        _onDead?.Invoke(transform.position);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -34,6 +42,13 @@ public class Cube : MonoBehaviour
                 StartCoroutine(TimerToDeath());
             }
         }
+    }
+
+    private void ResetSpins()
+    {
+        transform.rotation = Quaternion.identity;
+        _rigidbody.velocity = Vector3.zero;
+        _rigidbody.angularVelocity = Vector3.zero;
     }
 
     private void GetRandomColor() =>

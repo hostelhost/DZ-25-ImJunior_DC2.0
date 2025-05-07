@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bomb : MonoBehaviour
+public class Bomb : MonoBehaviour, IAppearing
 {
     private int _lifeTimer;
     private Material _material;
@@ -14,9 +14,7 @@ public class Bomb : MonoBehaviour
     private float _radiusDitonate = 10f;
     private float _forceDetonate = 1000f;
 
-    public event Action<Bomb> Died;
-
-    public void Initialize(int lifeTime)
+    public void Initialize(int lifeTime, Action<Vector3> onDead = null)
     {
         _lifeTimer = lifeTime;
         _material = GetComponent<Renderer>().material;
@@ -45,7 +43,6 @@ public class Bomb : MonoBehaviour
         _material.color = _color;
 
         Detonate();
-        Died?.Invoke(this);
     }
 
     private void Detonate()
