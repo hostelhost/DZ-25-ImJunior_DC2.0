@@ -10,14 +10,11 @@ public class Spawner : MonoBehaviour
 
     private WaitForSeconds _spawnInterval = new WaitForSeconds(0.5f);
 
-    public Pool<Cube> CubePool { get; private set; }
-    public Pool<Bomb> BombPool { get; private set; }
+    public Pool<Cube> CubePool { get; private set; } = new();
+    public Pool<Bomb> BombPool { get; private set; } = new();
 
     private void Awake()
     {
-        CubePool = new();
-        BombPool = new();
-
         CreatePools();
     }
 
