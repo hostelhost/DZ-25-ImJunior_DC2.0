@@ -20,10 +20,13 @@ public class GameStatsAggregator : MonoBehaviour
     {
         // Проверка на null
         if (_cubeTotalSpawnedText == null || _cubeTotalCreatedText == null || _cubeCurrentActiveText == null)
-            Debug.Log("Поля пользовательского интерфейса куба не назначены!");
-
+        {
+            Debug.Log("cube TextMeshProUGUI == null");
+        }
         if (_bombTotalSpawnedText == null || _bombTotalCreatedText == null || _bombCurrentActiveText == null)
-            Debug.Log("Поля пользовательского интерфейса бомбы не назначены!");
+        {
+            Debug.Log("bomb TextMeshProUGUI == null ");
+        }
 
         _cubeDisplay = new (_cubeTotalSpawnedText, _cubeTotalCreatedText, _cubeCurrentActiveText);
         _bombDisplay = new (_bombTotalSpawnedText, _bombTotalCreatedText, _bombCurrentActiveText);
