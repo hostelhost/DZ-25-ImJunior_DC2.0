@@ -10,13 +10,10 @@ public class Pool<T> where T : MonoBehaviour, IAppearing
     private ObjectPool<T> _pool;
     private Action<Vector3> _onObjectDead;
 
-    public T Get() 
+    public T Get()
     {
         return _pool.Get();
     }
-
-    public void Release(T item) => 
-        _pool.Release(item);
 
     public void CreatePool(T prefab, int minLifetime, int maxLifetime, Action<Vector3> onObjectDead = null)
     {
@@ -33,19 +30,17 @@ public class Pool<T> where T : MonoBehaviour, IAppearing
             () => { return UnityEngine.Object.Instantiate(_prefab); },
             OnGetObject,
             OnReleaseObject,
-            T => { UnityEngine.Object.Destroy(T.gameObject); }
+            item => { UnityEngine.Object.Destroy(item.gameObject); }
         );
     }
 
     private void OnGetObject(T item)
     {
         item.gameObject.SetActive(true);
-        item.Initialize(UnityEngine.Random.Range(_minLifetime, _maxLifetime), 
-            pos => 
-            { 
-                _pool.Release(item);
-                _onObjectDead?.Invoke(pos); 
-            }                                                                                  //ÍÈÕÓß ÍÅ ÏÎÍßÒÍÎ!!!
+        item.Initialize(UnityEngine.Random.Range(_minLifetime, _maxLifetime), position => {
+            _pool.Release(item);
+            _onObjectDead?.Invoke(position);
+        }
         );
     }
 

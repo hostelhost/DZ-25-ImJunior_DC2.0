@@ -10,17 +10,19 @@ public class Bomb : MonoBehaviour, IAppearing
     private Color _color;
     private float _maxValue = 1f;
     private float _minValue = 0f;
+    private Action<Vector3> _onDead;
 
     private float _radiusDitonate = 10f;
     private float _forceDetonate = 1000f;
 
-    public void Initialize(int lifeTime, Action<Vector3> onDead = null)
+    private void Awake() =>   
+        _material = GetComponent<Renderer>().material;
+
+    public void Initialize(int lifeTime, Action<Vector3> onDead)
     {
         _lifeTimer = lifeTime;
-        _material = GetComponent<Renderer>().material;
-        _color = _material.color;
-        _color.a = _maxValue;
-        _material.color = _color;
+        _onDead = onDead;
+        ChangeColorADiopozon(_maxValue);
         StartCoroutine(BecomesTransparent());
     }
 
@@ -32,17 +34,21 @@ public class Bomb : MonoBehaviour, IAppearing
         while (timer < _lifeTimer)
         {
             progress = timer / _lifeTimer;
-            _color.a = Mathf.Lerp(_maxValue, _minValue, progress);
-            _material.color = _color;
+            ChangeColorADiopozon(Mathf.Lerp(_maxValue, _minValue, progress));
             timer += Time.deltaTime;
 
             yield return null;
         }
 
-        _color.a = _minValue;
-        _material.color = _color;
-
+        ChangeColorADiopozon(_minValue);
         Detonate();
+        _onDead?.Invoke(transform.position);
+    }
+
+    private void ChangeColorADiopozon(float endResult)
+    {
+        _color.a = endResult;
+        _material.color = _color;
     }
 
     private void Detonate()

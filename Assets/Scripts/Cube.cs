@@ -8,27 +8,12 @@ public class Cube : MonoBehaviour, IAppearing
     private bool _isCollision;
     private Rigidbody _rigidbody;
     private Action<Vector3> _onDead;
+    private Material _material;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
-    }
-
-    public void Initialize(int lifeTime, Action<Vector3> onDead)
-    {
-        _lifeTimer = new WaitForSeconds(lifeTime);
-        _onDead = onDead;
-        ResetSpins();
-
-        _isCollision = false;
-        GetComponent<Renderer>().material.color = Color.white;
-    }
-
-    private IEnumerator TimerToDeath()
-    {
-        yield return _lifeTimer;
-
-        _onDead?.Invoke(transform.position);
+        _material = GetComponent<Renderer>().material;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -44,13 +29,29 @@ public class Cube : MonoBehaviour, IAppearing
         }
     }
 
-    private void ResetSpins()
+    public void Initialize(int lifeTime, Action<Vector3> onDead)
+    {
+        _lifeTimer = new WaitForSeconds(lifeTime);
+        _onDead = onDead;
+        Reseting();
+    }
+
+    private IEnumerator TimerToDeath()
+    {
+        yield return _lifeTimer;
+
+        _onDead?.Invoke(transform.position);
+    }
+
+    private void Reseting()
     {
         transform.rotation = Quaternion.identity;
         _rigidbody.velocity = Vector3.zero;
         _rigidbody.angularVelocity = Vector3.zero;
+        _isCollision = false;
+        _material.color = Color.white;
     }
 
     private void GetRandomColor() =>
-          GetComponent<Renderer>().material.color = UnityEngine.Random.ColorHSV();
+          _material.color = UnityEngine.Random.ColorHSV();
 }
