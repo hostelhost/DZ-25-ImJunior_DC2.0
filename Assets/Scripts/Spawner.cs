@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Spawner : MonoBehaviour 
+public class Spawner : MonoBehaviour
 {
     [SerializeField] private Cube _cubePrefab;
     [SerializeField] private Bomb _bombPrefab;
@@ -10,20 +10,25 @@ public class Spawner : MonoBehaviour
 
     private WaitForSeconds _spawnInterval = new WaitForSeconds(0.5f);
 
-    private Pool<Cube> _cubePool = new();
-    private Pool<Bomb> _bombPool = new();
+    public Pool<Cube> CubePool { get; private set; }
+    public Pool<Bomb> BombPool { get; private set; }
 
-    private void Awake()=>   
-        CreatePools();  
+    private void Awake()
+    {
+        CubePool = new();
+        BombPool = new();
 
-    private void Start() =>   
+        CreatePools();
+    }
+
+    private void Start() =>
         StartCoroutine(SpawnCubes());
 
     private IEnumerator SpawnCubes()
     {
         while (true)
         {
-            SetPositionCube(_cubePool.Get());
+            SetPositionCube(CubePool.Get());
 
             yield return _spawnInterval;
         }
@@ -31,8 +36,8 @@ public class Spawner : MonoBehaviour
 
     private void CreatePools()
     {
-        _cubePool.CreatePool(_cubePrefab, _minLifetime, _maxLifetime, SpawnBombAtPosition);
-        _bombPool.CreatePool(_bombPrefab, _minLifetime, _maxLifetime); 
+        CubePool.CreatePool(_cubePrefab, _minLifetime, _maxLifetime, SpawnBombAtPosition);
+        BombPool.CreatePool(_bombPrefab, _minLifetime, _maxLifetime);
     }
 
     private void SetPositionCube(Cube cube)
@@ -49,7 +54,7 @@ public class Spawner : MonoBehaviour
 
     private void SpawnBombAtPosition(Vector3 vector3)
     {
-        Bomb bomb = _bombPool.Get();
+        Bomb bomb = BombPool.Get();
         bomb.transform.position = vector3;
     }
 }

@@ -10,8 +10,18 @@ public class Pool<T> where T : MonoBehaviour, IAppearing
     private ObjectPool<T> _pool;
     private Action<Vector3> _onObjectDead;
 
+    public event Action<int> Created;
+    public event Action Spawned;
+    public event Action Deactivated;
+
+    public int CountActive()
+    {
+        return _pool.CountActive;
+    }
+
     public T Get()
     {
+        Spawned?.Invoke();
         return _pool.Get();
     }
 
@@ -27,7 +37,9 @@ public class Pool<T> where T : MonoBehaviour, IAppearing
     private void InitializePool()
     {
         _pool = new ObjectPool<T>(
-            () => { return UnityEngine.Object.Instantiate(_prefab); },
+            () => { Created?.Invoke(_pool.CountAll); 
+                return UnityEngine.Object.Instantiate(_prefab); 
+            },
             OnGetObject,
             OnReleaseObject,
             item => { UnityEngine.Object.Destroy(item.gameObject); }
@@ -44,6 +56,9 @@ public class Pool<T> where T : MonoBehaviour, IAppearing
         );
     }
 
-    private void OnReleaseObject(T item) =>
+    private void OnReleaseObject(T item)
+    {
         item.gameObject.SetActive(false);
+        Deactivated?.Invoke();
+    }
 }
