@@ -14,10 +14,7 @@ public class Pool<T> where T : MonoBehaviour, IAppearing
     public event Action Spawned;
     public event Action Deactivated;
 
-    public int CountActive()
-    {
-        return _pool.CountActive;
-    }
+    public int CountActive => _pool != null ? _pool.CountActive : 0;
 
     public T Get()
     {

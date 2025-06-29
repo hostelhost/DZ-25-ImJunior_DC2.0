@@ -24,7 +24,7 @@ public class Cube : MonoBehaviour, IAppearing
             {
                 _isCollision = true;
                 GetRandomColor();
-                StartCoroutine(TimerToDeath());
+                StartCoroutine(DieTime());
             }
         }
     }
@@ -36,7 +36,7 @@ public class Cube : MonoBehaviour, IAppearing
         Reseting();
     }
 
-    private IEnumerator TimerToDeath()
+    private IEnumerator DieTime()
     {
         yield return _lifeTimer;
 

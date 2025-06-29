@@ -43,7 +43,7 @@ public class StatisticsDisplay<T> where T : MonoBehaviour, IAppearing
         Print(_totalCreatedText, totalCreated);
 
     private void OnCurrentActive()=>      
-        Print(_currentActiveText, _pool.CountActive());
+        Print(_currentActiveText, _pool.CountActive);
     
     private void Print(TextMeshProUGUI changeable, int count) =>
         changeable.text = Convert.ToString(count);

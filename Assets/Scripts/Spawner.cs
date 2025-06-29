@@ -23,7 +23,7 @@ public class Spawner : MonoBehaviour
 
     private IEnumerator SpawnCubes()
     {
-        while (true)
+        while (enabled)
         {
             SetPositionCube(CubePool.Get());
 
