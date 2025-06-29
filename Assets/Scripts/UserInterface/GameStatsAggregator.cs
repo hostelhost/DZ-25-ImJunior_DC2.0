@@ -18,13 +18,13 @@ public class GameStatsAggregator : MonoBehaviour
 
     private void Awake()
     {
-        _cubeDisplay = new(_spawner.CubePool, _cubeTotalSpawnedText, _cubeTotalCreatedText, _cubeCurrentActiveText);
-        _bombDisplay = new(_spawner.BombPool, _bombTotalSpawnedText, _bombTotalCreatedText, _bombCurrentActiveText);
+        //_cubeDisplay = new(_spawner.CubePool, _cubeTotalSpawnedText, _cubeTotalCreatedText, _cubeCurrentActiveText);
+        //_bombDisplay = new(_spawner.BombPool, _bombTotalSpawnedText, _bombTotalCreatedText, _bombCurrentActiveText);
     }
 
     private void OnEnable()
     {
-        _cubeDisplay.Subscribe();
-        _bombDisplay.Subscribe();
+        //_cubeDisplay.Subscribe();
+        //_bombDisplay.Subscribe();
     }
 }
