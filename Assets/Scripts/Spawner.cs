@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -24,6 +25,19 @@ public class Spawner : MonoBehaviour
         CreatePool();
     }
 
+    private void Start() =>
+        StartCoroutine(SpawnCubes());
+
+    private IEnumerator SpawnCubes()
+    {
+        while (enabled)
+        {
+            GetCube();
+
+            yield return _spawnInterval;
+        }
+    }
+
     private void CreatePool()
     {
         _pool = new ObjectPool<GameObject>(
@@ -38,7 +52,7 @@ public class Spawner : MonoBehaviour
         );
     }
 
-    public GameObject Get()
+    public GameObject GetCube()
     {
         Spawned?.Invoke();
         return _pool.Get();

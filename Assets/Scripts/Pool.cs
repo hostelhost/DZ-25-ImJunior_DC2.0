@@ -3,59 +3,62 @@ using UnityEngine;
 using UnityEngine.Pool;
 
 public class Pool<T> where T : MonoBehaviour, IAppearing
-//{
-//    private T _prefab;
-//    private int _minLifetime;
-//    private int _maxLifetime;
-//    private ObjectPool<T> _pool;
-//    private Action<Vector3> _onObjectDead;
+{
+    private T _prefab;
+    private int _minLifetime;
+    private int _maxLifetime;
+    private ObjectPool<T> _pool;
+    private Action<Vector3> _onObjectDead;
 
-//    public event Action<int> Created;
-//    public event Action Spawned;
-//    public event Action Deactivated;
+    public event Action<int> Created;
+    public event Action Spawned;
+    public event Action Deactivated;
 
-//    public int CountActive => _pool != null ? _pool.CountActive : 0;
+    public int CountActive => _pool != null ? _pool.CountActive : 0;
 
-//    public T Get()
-//    {
-//        Spawned?.Invoke();
-//        return _pool.Get();
-//    }
+    public T Get()
+    {
+        Spawned?.Invoke();
+        return _pool.Get();
+    }
 
-//    public void CreatePool(T prefab, int minLifetime, int maxLifetime, Action<Vector3> onObjectDead = null)
-//    {
-//        _prefab = prefab;
-//        _minLifetime = minLifetime;
-//        _maxLifetime = maxLifetime;
-//        _onObjectDead = onObjectDead;
-//        InitializePool();
-//    }
+    public void CreatePool(T prefab, int minLifetime, int maxLifetime, Action<Vector3> onObjectDead = null)
+    {
+        _prefab = prefab;
+        _minLifetime = minLifetime;
+        _maxLifetime = maxLifetime;
+        _onObjectDead = onObjectDead;
+        InitializePool();
+    }
 
-//    private void InitializePool()
-//    {
-//        _pool = new ObjectPool<T>(
-//            () => { Created?.Invoke(_pool.CountAll); 
-//                return UnityEngine.Object.Instantiate(_prefab); 
-//            },
-//            OnGetObject,
-//            OnReleaseObject,
-//            item => { UnityEngine.Object.Destroy(item.gameObject); }
-//        );
-//    }
+    private void InitializePool()
+    {
+        _pool = new ObjectPool<T>(
+            () =>
+            {
+                Created?.Invoke(_pool.CountAll);
+                return UnityEngine.Object.Instantiate(_prefab);
+            },
+            OnGetObject,
+            OnReleaseObject,
+            item => { UnityEngine.Object.Destroy(item.gameObject); }
+        );
+    }
 
-//    private void OnGetObject(T item)
-//    {
-//        item.gameObject.SetActive(true);
-//        item.Initialize(UnityEngine.Random.Range(_minLifetime, _maxLifetime), position => {
-//            _pool.Release(item);
-//            _onObjectDead?.Invoke(position);
-//        }
-//        );
-//    }
+    private void OnGetObject(T item)
+    {
+        item.gameObject.SetActive(true);
+        item.Initialize(UnityEngine.Random.Range(_minLifetime, _maxLifetime), position =>
+        {
+            _pool.Release(item);
+            _onObjectDead?.Invoke(position);
+        }
+        );
+    }
 
-//    private void OnReleaseObject(T item)
-//    {
-//        item.gameObject.SetActive(false);
-//        Deactivated?.Invoke();
-//    }
-//}
+    private void OnReleaseObject(T item)
+    {
+        item.gameObject.SetActive(false);
+        Deactivated?.Invoke();
+    }
+}
