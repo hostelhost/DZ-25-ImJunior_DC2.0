@@ -16,15 +16,21 @@ public class GameStatsAggregator : MonoBehaviour
     private StatisticsDisplay<Cube> _cubeDisplay;
     private StatisticsDisplay<Bomb> _bombDisplay;
 
-    //private void Awake()
-    //{
-    //    _cubeDisplay = new(_spawner.CubePool, _cubeTotalSpawnedText, _cubeTotalCreatedText, _cubeCurrentActiveText);
-    //    _bombDisplay = new(_spawner.BombPool, _bombTotalSpawnedText, _bombTotalCreatedText, _bombCurrentActiveText);
-    //}
+    private void Awake()
+    {
+        _cubeDisplay = new(_spawner.CubePool, _cubeTotalSpawnedText, _cubeTotalCreatedText, _cubeCurrentActiveText);
+        _bombDisplay = new(_spawner.BombPool, _bombTotalSpawnedText, _bombTotalCreatedText, _bombCurrentActiveText);
+    }
 
-    //private void OnEnable()
-    //{
-    //    _cubeDisplay.Subscribe();
-    //    _bombDisplay.Subscribe();
-    //}
+    private void OnEnable()
+    {
+        _cubeDisplay.Subscribe();
+        _bombDisplay.Subscribe();
+    }
+
+    private void OnDisable()
+    {
+        _cubeDisplay.Unsubscribe();
+        _bombDisplay.Unsubscribe();
+    }
 }
