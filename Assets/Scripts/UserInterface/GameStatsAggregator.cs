@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class GameStatsAggregator : MonoBehaviour
 {
-    [SerializeField] private Spawner _spawner;
+    [SerializeField] private Spawner<Cube> _spawnerCube;
+    [SerializeField] private Spawner<Bomb> _spawnerBomb;
 
     [SerializeField] private TextMeshProUGUI _cubeTotalSpawnedText;
     [SerializeField] private TextMeshProUGUI _cubeTotalCreatedText;
@@ -18,8 +19,8 @@ public class GameStatsAggregator : MonoBehaviour
 
     private void Awake()
     {
-        _cubeDisplay = new(_spawner.CubePool, _cubeTotalSpawnedText, _cubeTotalCreatedText, _cubeCurrentActiveText);
-        _bombDisplay = new(_spawner.BombPool, _bombTotalSpawnedText, _bombTotalCreatedText, _bombCurrentActiveText);
+        _cubeDisplay = new(_spawnerCube.Pool, _cubeTotalSpawnedText, _cubeTotalCreatedText, _cubeCurrentActiveText);
+        _bombDisplay = new(_spawnerBomb.Pool, _bombTotalSpawnedText, _bombTotalCreatedText, _bombCurrentActiveText);
     }
 
     private void OnEnable()

@@ -2,57 +2,50 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class Spawner : MonoBehaviour
+public class Spawner<T> : MonoBehaviour where T : IAppearing
 {
-    [SerializeField] private Cube _cubePrefab;
-    [SerializeField] private Bomb _bombPrefab;
+    [SerializeField] private T _prefab;
+
     [SerializeField] private int _minLifetime = 2;
     [SerializeField] private int _maxLifetime = 5;
+    [SerializeField] private bool _autoSpawn;
 
     private WaitForSeconds _spawnInterval = new WaitForSeconds(0.5f);
-
-    public Pool<Cube> CubePool { get; private set; } = new();
-    public Pool<Bomb> BombPool { get; private set; } = new();
+    public Pool<T> Pool { get; private set; } = new();
+    public Action<Vector3> OnDead; 
 
     private void Awake()
     {
-        CreatePools();
+        Pool.CreatePool(_prefab, _minLifetime, _maxLifetime, position =>
+        {
+            OnDead?.Invoke(position);
+        });
     }
 
-    private void Start() =>
-        StartCoroutine(SpawnCubes());
+    private void Start()
+    {
+        if (_autoSpawn)
+            StartCoroutine(AutoSpawnLoop());
+    }
 
-    private IEnumerator SpawnCubes()
+    private IEnumerator AutoSpawnLoop()
     {
         while (enabled)
         {
-            SetPositionCube(CubePool.Get());
-
+            Spawn(GetRandomPosition());
             yield return _spawnInterval;
         }
     }
 
-    private void CreatePools()
+    public void Spawn(Vector3 position)
     {
-        CubePool.CreatePool(_cubePrefab, _minLifetime, _maxLifetime, SpawnBombAtPosition);
-        BombPool.CreatePool(_bombPrefab, _minLifetime, _maxLifetime);
-    }
-
-    private void SetPositionCube(Cube cube)
-    {
-        cube.transform.position = GetRandomPosition();
+        T appearing = Pool.Get();
+        appearing.transform.position = position;
     }
 
     private Vector3 GetRandomPosition()
     {
         float radius = transform.localScale.x / 2;
-
         return transform.position + UnityEngine.Random.insideUnitSphere * radius;
-    }
-
-    private void SpawnBombAtPosition(Vector3 vector3)
-    {
-        Bomb bomb = BombPool.Get();
-        bomb.transform.position = vector3;
     }
 }
