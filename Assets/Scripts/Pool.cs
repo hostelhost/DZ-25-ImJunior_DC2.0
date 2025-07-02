@@ -1,26 +1,22 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
 
-public class Pool<T> where T : MonoBehaviour, IAppearing
+public class Pool<T> where T : IAppearing
 {
+    private Queue<T> _pool = new();
     private T _prefab;
+
     private int _minLifetime;
     private int _maxLifetime;
-    private ObjectPool<T> _pool;
     private Action<Vector3> _onObjectDead;
 
     public event Action<int> Created;
     public event Action Spawned;
     public event Action Deactivated;
 
-    public int CountActive => _pool != null ? _pool.CountActive : 0;
-
-    public T Get()
-    {
-        Spawned?.Invoke();
-        return _pool.Get();
-    }
+    public int CountActive { get; private set; }
+    public int CountTotal { get; private set; }
 
     public void CreatePool(T prefab, int minLifetime, int maxLifetime, Action<Vector3> onObjectDead = null)
     {
@@ -28,37 +24,37 @@ public class Pool<T> where T : MonoBehaviour, IAppearing
         _minLifetime = minLifetime;
         _maxLifetime = maxLifetime;
         _onObjectDead = onObjectDead;
-        InitializePool();
     }
 
-    private void InitializePool()
+    public T Get()
     {
-        _pool = new ObjectPool<T>(
-            () =>
-            {
-                Created?.Invoke(_pool.CountAll);
-                return UnityEngine.Object.Instantiate(_prefab);
-            },
-            OnGetObject,
-            OnReleaseObject,
-            item => { UnityEngine.Object.Destroy(item.gameObject); }
-        );
-    }
+        T item = _pool.Count > 0 ? _pool.Dequeue() : CreateNew();
 
-    private void OnGetObject(T item)
-    {
         item.gameObject.SetActive(true);
         item.Initialize(UnityEngine.Random.Range(_minLifetime, _maxLifetime), position =>
         {
-            _pool.Release(item);
+            Release(item);
             _onObjectDead?.Invoke(position);
-        }
-        );
+        });
+
+        CountActive++;
+        Spawned?.Invoke();
+        return item;
     }
 
-    private void OnReleaseObject(T item)
+    public void Release(T item)
     {
         item.gameObject.SetActive(false);
+        _pool.Enqueue(item);
+        CountActive--;
         Deactivated?.Invoke();
+    }
+
+    private T CreateNew()
+    {
+        T instance = UnityEngine.Object.Instantiate(_prefab);
+        CountTotal++;
+        Created?.Invoke(CountTotal);
+        return instance;
     }
 }

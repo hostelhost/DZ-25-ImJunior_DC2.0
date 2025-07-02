@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bomb : MonoBehaviour, IAppearing
+public class Bomb : IAppearing
 {
     private int _lifeTimer;
     private Material _material;
@@ -18,7 +18,7 @@ public class Bomb : MonoBehaviour, IAppearing
     private void Awake() =>   
         _material = GetComponent<Renderer>().material;
 
-    public void Initialize(int lifeTime, Action<Vector3> onDead)
+    public override void Initialize(int lifeTime, Action<Vector3> onDead)
     {
         _lifeTimer = lifeTime;
         _onDead = onDead;

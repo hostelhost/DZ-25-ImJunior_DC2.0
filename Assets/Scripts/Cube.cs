@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class Cube : MonoBehaviour, IAppearing
+public class Cube : IAppearing
 {
     private WaitForSeconds _lifeTimer;
     private bool _isCollision;
@@ -29,7 +29,7 @@ public class Cube : MonoBehaviour, IAppearing
         }
     }
 
-    public void Initialize(int lifeTime, Action<Vector3> onDead)
+    public override void Initialize(int lifeTime, Action<Vector3> onDead)
     {
         _lifeTimer = new WaitForSeconds(lifeTime);
         _onDead = onDead;

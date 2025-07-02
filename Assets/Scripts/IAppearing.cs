@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public interface IAppearing
+public abstract class IAppearing : MonoBehaviour
 {
-    void Initialize(int lifeTime, Action<Vector3> OnDead );
+    public abstract void Initialize(int lifeTime, Action<Vector3> OnDead);
 }

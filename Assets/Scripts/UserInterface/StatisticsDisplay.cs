@@ -2,7 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 
-public class StatisticsDisplay<T> where T : MonoBehaviour, IAppearing
+public class StatisticsDisplay<T> where T : IAppearing
 {
     private Pool<T> _pool;
 
