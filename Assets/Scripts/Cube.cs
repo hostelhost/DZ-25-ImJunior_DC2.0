@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class Cube : IAppearing
+public class Cube : Appearing
 {
     private WaitForSeconds _lifeTimer;
     private bool _isCollision;

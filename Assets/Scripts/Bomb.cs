@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bomb : IAppearing
+public class Bomb : Appearing
 {
     private int _lifeTimer;
     private Material _material;
@@ -53,11 +53,11 @@ public class Bomb : IAppearing
 
     private void Detonate()
     {
-        foreach (Rigidbody rigidbody in GetRigidbody(_radiusDitonate))
+        foreach (Rigidbody rigidbody in GetRigidbodys(_radiusDitonate))
             rigidbody.AddExplosionForce(_forceDetonate, transform.position, _radiusDitonate);       
     }
 
-    private List<Rigidbody> GetRigidbody(float radius)
+    private List<Rigidbody> GetRigidbodys(float radius)
     {
         List<Rigidbody> rigidbodies = new ();
         Rigidbody rigidbody;

@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class Spawner<T> : MonoBehaviour where T : IAppearing
+public class Spawner<T> : MonoBehaviour where T : Appearing
 {
     [SerializeField] private T _prefab;
 
@@ -12,35 +12,35 @@ public class Spawner<T> : MonoBehaviour where T : IAppearing
 
     private WaitForSeconds _spawnInterval = new WaitForSeconds(0.5f);
     public Pool<T> Pool { get; private set; } = new();
-    public Action<Vector3> OnDead; 
+    private Action<Vector3> OnDead = null;
 
-    private void Awake()
+    private void Start()
     {
         Pool.CreatePool(_prefab, _minLifetime, _maxLifetime, position =>
         {
             OnDead?.Invoke(position);
         });
-    }
 
-    private void Start()
-    {
         if (_autoSpawn)
             StartCoroutine(AutoSpawnLoop());
+    }
+
+    public void GetAction(Action<Vector3> onDead) =>   
+        OnDead = onDead;
+    
+    public void SpawnInPosition(Vector3 position)
+    {
+        T appearing = Pool.Get();
+        appearing.transform.position = position;
     }
 
     private IEnumerator AutoSpawnLoop()
     {
         while (enabled)
         {
-            Spawn(GetRandomPosition());
+            SpawnInPosition(GetRandomPosition());
             yield return _spawnInterval;
         }
-    }
-
-    public void Spawn(Vector3 position)
-    {
-        T appearing = Pool.Get();
-        appearing.transform.position = position;
     }
 
     private Vector3 GetRandomPosition()

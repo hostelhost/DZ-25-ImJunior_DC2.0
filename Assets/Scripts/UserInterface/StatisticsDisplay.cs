@@ -1,8 +1,7 @@
 using System;
 using TMPro;
-using UnityEngine;
 
-public class StatisticsDisplay<T> where T : IAppearing
+public class StatisticsDisplay<T> where T : Appearing
 {
     private Pool<T> _pool;
 
