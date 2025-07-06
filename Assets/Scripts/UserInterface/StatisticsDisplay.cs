@@ -1,7 +1,7 @@
 using System;
 using TMPro;
 
-public class StatisticsDisplay<T> where T : Appearing
+public class StatisticsDisplay<T> where T : SpawnedObject
 {
     private Pool<T> _pool;
 

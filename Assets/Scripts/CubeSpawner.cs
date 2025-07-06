@@ -6,7 +6,7 @@ public class CubeSpawner : Spawner<Cube>
 
     private void Awake()
     {
-        GetAction(position =>
+        SetDeathCallback(position =>
         {
             _bombSpawner.SpawnInPosition(position);
         });

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bomb : Appearing
+public class Bomb : SpawnedObject
 {
     private int _lifeTimer;
     private Material _material;

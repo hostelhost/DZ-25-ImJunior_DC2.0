@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class Spawner<T> : MonoBehaviour where T : Appearing
+public class Spawner<T> : MonoBehaviour where T : SpawnedObject
 {
     [SerializeField] private T _prefab;
 
@@ -25,7 +25,7 @@ public class Spawner<T> : MonoBehaviour where T : Appearing
             StartCoroutine(AutoSpawnLoop());
     }
 
-    public void GetAction(Action<Vector3> onDead) =>   
+    public void SetDeathCallback(Action<Vector3> onDead) =>   
         OnDead = onDead;
     
     public void SpawnInPosition(Vector3 position)

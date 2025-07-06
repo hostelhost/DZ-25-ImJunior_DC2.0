@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class Cube : Appearing
+public class Cube : SpawnedObject
 {
     private WaitForSeconds _lifeTimer;
     private bool _isCollision;
@@ -20,7 +20,7 @@ public class Cube : Appearing
     {
         if (_isCollision == false)
         {
-            if (collision.collider.GetComponent<TriggerPlatform>())
+            if (collision.collider.TryGetComponent<TriggerPlatform>(out TriggerPlatform component))
             {
                 _isCollision = true;
                 GetRandomColor();

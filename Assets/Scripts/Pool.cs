@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pool<T> where T : Appearing
+public class Pool<T> where T : SpawnedObject
 {
     private Queue<T> _pool = new();
     private T _prefab;
